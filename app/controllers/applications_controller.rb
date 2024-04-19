@@ -8,6 +8,12 @@ class ApplicationsController < ApplicationController
         render json: @application.errors, status: :unprocessable_entity
       end
     end
+
+    def total_chats
+      @total_chats = Chat.total_chats_by_application(params[:application_id])
+  
+      render json: { total_chats: @total_chats }
+    end
   
     private
   
@@ -17,7 +23,7 @@ class ApplicationsController < ApplicationController
 
     def generate_unique_token
       loop do
-        token = SecureRandom.hex(10) # Generate a random hex token
+        token = SecureRandom.hex(10)
         break token unless Application.exists?(token: token)
       end
     end
