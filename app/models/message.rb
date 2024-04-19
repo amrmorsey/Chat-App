@@ -7,16 +7,16 @@ class Message < ApplicationRecord
   validates :number, presence: true, uniqueness: { scope: :chat_id }
   validates :body, presence: true
 
-  before_create :set_message_number
+  after_commit :index_document, on: [:create, :update]
+
+  def index_document
+    __elasticsearch__.index_document
+  end
 
   settings index: { number_of_shards: 1 } do
     mappings dynamic: 'false' do
       indexes :body, analyzer: 'english'
     end
-  end
-
-  def set_message_number
-    self.number = chat.messages.count + 1
   end
 
 end

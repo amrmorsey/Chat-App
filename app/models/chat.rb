@@ -4,11 +4,11 @@ class Chat < ApplicationRecord
 
   validates :number, presence: false, uniqueness: { scope: :application_id }
 
-  before_create :set_chat_number
+  # before_create :set_chat_number
 
   def set_chat_number
-    last_chat_number = application.chats.maximum(:number) || 0
-    self.number = last_chat_number + 1
+    application_token = self.application.token
+    self.number = $redis.hincrby("chat_numbers", application_token, 1)
   end
 
 end
