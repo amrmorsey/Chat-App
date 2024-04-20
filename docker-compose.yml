@@ -61,7 +61,7 @@ services:
       context: .
       dockerfile: Dockerfile
     environment:
-      WORKERS: ChatWorker
+      WORKERS: ChatWorker,ChatDeleteWorker
       RAILS_ENV: development
       DATABASE_URL: "mysql2://user:password@db:3306/chat_app_development"
       ELASTICSEARCH_URL: "http://elasticsearch:9200"
@@ -77,7 +77,7 @@ services:
       context: .
       dockerfile: Dockerfile
     environment:
-      WORKERS: MessageWorker
+      WORKERS: MessageWorker,MessageDeleteWorker
       RAILS_ENV: development
       DATABASE_URL: "mysql2://user:password@db:3306/chat_app_development"
       ELASTICSEARCH_URL: "http://elasticsearch:9200"
@@ -88,6 +88,22 @@ services:
       - web
     command: bash -c "./wait.sh elasticsearch:9200 && rake sneakers:run"
   
+
+  applicationworker:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      WORKERS: ApplicationDeleteWorker
+      RAILS_ENV: development
+      DATABASE_URL: "mysql2://user:password@db:3306/chat_app_development"
+      ELASTICSEARCH_URL: "http://elasticsearch:9200"
+      REDIS_URL: "redis://redis:6379/0"
+    volumes:
+      - .:/app
+    depends_on:
+      - web
+    command: bash -c "./wait.sh elasticsearch:9200 && rake sneakers:run"
   
 volumes:
   db_data:

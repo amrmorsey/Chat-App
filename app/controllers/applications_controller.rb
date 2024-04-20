@@ -8,7 +8,7 @@ class ApplicationsController < ApplicationController
     def update
       application = Application.find_by(token: params[:id])
       if application.update(application_params)
-        render json: application, status: :ok
+        render json: { name: @application.name, token: @application.token }, status: :ok
       else
         render json: { errors: application.errors }, status: :unprocessable_entity
       end
@@ -18,9 +18,20 @@ class ApplicationsController < ApplicationController
       @application = Application.new(application_params)
       @application.token = generate_unique_token
       if @application.save
-        render json: { token: @application.token }, status: :created
+        render json: { name: @application.name, token: @application.token }, status: :created
       else
         render json: @application.errors, status: :unprocessable_entity
+      end
+    end
+
+    def destroy
+      application = Application.find_by(token: params[:id])
+      if application
+        exchange = APPLICATION_CHANNEL.default_exchange
+        exchange.publish({token: params[:id]}.to_json(), routing_key: 'application.delete')
+        render json: { message: 'Application and associated chats and messages deleted successfully' }, status: :ok
+      else
+        render json: { error: 'Failed to delete application' }, status: :unprocessable_entity
       end
     end
 

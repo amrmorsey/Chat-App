@@ -1,3 +1,4 @@
+
 # Chat Application System
 ## Approach
 To achieve the purpose of the task, I used the following technologies.
@@ -60,13 +61,40 @@ curl "http://localhost:3000/applications/:token/chats"
 curl "http://localhost:3000/applications/:token/chats/:chat_number/messages"
 ```
 
-- Update application
+- Update an application
 ```
-curl -X PUT   http://localhost:3000/applications/:token  -H 'Content-Type: application/json'   -d '{
+curl -X PUT   http://localhost:3000/applications/:token -H 'Content-Type: application/json'   -d '{
     "application": {
       "name": "New Application Name"
     }
   }'
+```
+
+- Update a chat
+```
+curl -X PUT  http://localhost:3000/applications/:token/chats/:chat_number   -H 'Content-Type: application/json' -d '{
+    "name": "newchatname"
+  }'
+```
+
+- Update a message
+```
+curl -X PUT -H "Content-Type: application/json" -d '{"body":"modified"}' http://localhost:3000/applications/:token/chats/:chat_id/messages/:message_number
+```
+
+- Delete an application and all its chats and messages
+```
+url -X DELETE http://localhost:3000/applications/:token -H "Content-Type: application/json"
+```
+
+- Delete a chat and all its messages
+```
+curl -X DELETE http://localhost:3000/applications/:token/chats/:chat_number
+```
+
+- Delete a message
+```
+curl -X DELETE -H "Content-Type: application/json" http://localhost:3000/applications/:token/chats/:chat_number/messages/:message_number
 ```
 ## How to clean
 

@@ -11,3 +11,4 @@ $conn.start
 
 CHAT_CHANNEL = $conn.create_channel
 MESSAGE_CHANNEL = $conn.create_channel
+APPLICATION_CHANNEL = $conn.create_channel

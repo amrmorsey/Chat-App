@@ -18,6 +18,28 @@ class MessagesController < ApplicationController
       end
     end
 
+    def update
+      @message = Message.find_by(number: params[:id], chat_id: @chat.id)
+
+      if @message.update(message_params)
+        render json: { body: @message.body, number: @message.number, created_at: @message.created_at }, status: :ok
+      else
+        render json: { error: message.errors.full_messages.join(', ') }, status: :unprocessable_entity
+      end
+    end
+
+    def destroy
+      @message = Message.find_by(number: params[:id], chat_id: @chat.id)
+      
+      if @message
+        exchange = MESSAGE_CHANNEL.default_exchange
+        exchange.publish({number: @message.number, chat_id: @chat.id}.to_json(), routing_key: 'message.delete')
+        render json: { message: 'Message successfully deleted' }, status: :ok
+      else
+        render json: { error: 'Message not found' }, status: :not_found
+      end
+    end
+
 
     def search
       query = {
