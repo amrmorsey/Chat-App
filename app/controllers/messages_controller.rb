@@ -10,7 +10,8 @@ class MessagesController < ApplicationController
       @message = @chat.messages.new(message_params)
       @message.number = $redis.incr("#{params[:application_id]}_#{params[:chat_id]}_message_counter")
       if @message.valid?
-        MessageWorker.perform_async(@message.attributes)
+        exchange = MESSAGE_CHANNEL.default_exchange
+        exchange.publish(@message.to_json(), routing_key: 'message.create')
         render json: {message_number: @message.number}, status: :created
       else
         render json: @message.errors, status: :unprocessable_entity

@@ -53,5 +53,6 @@ gem 'elasticsearch-rails'
 # Redis
 gem 'redis'
 
-# Sidekiq for background jobs
-gem 'sidekiq'
+gem 'bunny'
+
+gem 'sneakers'

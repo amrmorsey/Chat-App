@@ -16,22 +16,8 @@ services:
       - db
       - elasticsearch
       - redis
+      - rabbitmq
     command: bash -c "./wait.sh elasticsearch:9200 && bundle exec rails db:create && bundle exec rails db:migrate && bundle exec rake elasticsearch:create_indexes && bundle exec rails server -b 0.0.0.0"
-  
-  sidekiq:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    command: bundle exec sidekiq
-    depends_on:
-      - db
-      - redis
-    environment:
-      RAILS_ENV: development
-      DATABASE_URL: "mysql2://user:password@db:3306/chat_app_development"
-      REDIS_URL: "redis://redis:6379/0"
-    volumes:
-      - .:/app
 
   db:
     image: mysql:5.7
@@ -60,6 +46,48 @@ services:
       - "6379:6379"
     volumes:
       - redis_data:/data
+  
+  rabbitmq:
+    image: "rabbitmq:latest"
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      - RABBITMQ_DEFAULT_USER=admin
+      - RABBITMQ_DEFAULT_PASS=admin
+
+  chatworker:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      WORKERS: ChatWorker
+      RAILS_ENV: development
+      DATABASE_URL: "mysql2://user:password@db:3306/chat_app_development"
+      ELASTICSEARCH_URL: "http://elasticsearch:9200"
+      REDIS_URL: "redis://redis:6379/0"
+    volumes:
+      - .:/app
+    depends_on:
+      - web
+    command: bash -c "./wait.sh elasticsearch:9200 && rake sneakers:run"
+  
+  messageworker:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      WORKERS: MessageWorker
+      RAILS_ENV: development
+      DATABASE_URL: "mysql2://user:password@db:3306/chat_app_development"
+      ELASTICSEARCH_URL: "http://elasticsearch:9200"
+      REDIS_URL: "redis://redis:6379/0"
+    volumes:
+      - .:/app
+    depends_on:
+      - web
+    command: bash -c "./wait.sh elasticsearch:9200 && rake sneakers:run"
+  
   
 volumes:
   db_data:

@@ -5,7 +5,8 @@ class ChatsController < ApplicationController
       @chat.set_chat_number
 
       if @chat.valid?
-        ChatWorker.perform_async(@chat.attributes)
+        exchange = CHAT_CHANNEL.default_exchange
+        exchange.publish(@chat.to_json(), routing_key: 'chat.create')
         render json: { chat_number: @chat.number }, status: :created
       else
         render json: @chat.errors, status: :unprocessable_entity

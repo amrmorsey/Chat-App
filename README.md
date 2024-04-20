@@ -1,24 +1,37 @@
-# README
+# Chat Application System
+## Approach
+To achieve the purpose of the task, I used the following technologies.
+ - I used MySQL for saving of the records of applications, chats and messages.
+ - I used ElasticSearch and its integration with rails to achieve the partial searching in the messages of each chat per application. This is done by indexing the database with ElasticSearch upon writing in the database.
+ - I used RabbitMQ to facilitate the asynchronous adding of messages and chats.
+ - I used Redis, to help in generating the chat numbers and the messages numbers.
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+## How to run
+Run the following command to build and run the application
 
-Things you may want to cover:
+    docker compose up --build
+The `--build` argument is to rebuild the chat app before deploying. If you already built it, then you can
 
-* Ruby version
+    docker compose up
 
-* System dependencies
+## APIs and How to test them
 
-* Configuration
+ - Add an application and get token
+`curl -X POST   http://localhost:3000/applications   -H 'Content-Type: application/json'   -d '{
+    "name": "Samplpp"
+  }'`
 
-* Database creation
+- Add chat to application
+`curl -X POST   http://localhost:3000/applications/:token/chats   -H 'Content-Type: application/json'`
 
-* Database initialization
+- Get total chats in an application
+`curl -X GET "http://localhost:3000/applications/:token/total_chats"`
 
-* How to run the test suite
+- Add message to a chat in an application
+` curl -X POST -H "Content-Type: application/json" -d '{"body":"Hello, World!"}' http://localhost:3000/applications/:token/chats/:chat_number/messages`
 
-* Services (job queues, cache servers, search engines, etc.)
+- Search/partial search for message in a chat in an application
+`curl -X GET 'http://localhost:3000/applications/:token/chats/:chat_number/messages/search?query=Hello'`
+## How to clean
 
-* Deployment instructions
-
-* ...
+    ./clean.sh
