@@ -1,5 +1,11 @@
 class ChatsController < ApplicationController
-    before_action :set_application, only: [:create]
+    before_action :set_application
+    
+    def index
+      chats = @application&.chats&.map { |chat| { messages_count: chat.messages_count, number: chat.number, created_at: chat.created_at } } || []
+      render json: chats, status: :ok
+    end
+    
     def create
       @chat = @application.chats.new
       @chat.set_chat_number

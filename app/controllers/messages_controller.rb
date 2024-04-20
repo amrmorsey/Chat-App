@@ -2,7 +2,7 @@ class MessagesController < ApplicationController
     before_action :set_chat
   
     def index
-      messages = @chat.messages
+      messages = @chat&.messages&.map { |message| { body: message.body, number: message.number, created_at: message.created_at } } || []
       render json: messages, status: :ok
     end
   

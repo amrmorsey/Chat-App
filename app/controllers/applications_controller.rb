@@ -1,4 +1,19 @@
 class ApplicationsController < ApplicationController
+
+    def index
+      applications = Application.all.map { |app| { token: app.token, name: app.name, created_at: app.created_at , chats_count: app.chats_count} } || []
+      render json: applications, status: :ok
+    end
+
+    def update
+      application = Application.find_by(token: params[:id])
+      if application.update(application_params)
+        render json: application, status: :ok
+      else
+        render json: { errors: application.errors }, status: :unprocessable_entity
+      end
+    end
+
     def create
       @application = Application.new(application_params)
       @application.token = generate_unique_token
