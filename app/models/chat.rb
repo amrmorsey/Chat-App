@@ -3,6 +3,7 @@ class Chat < ApplicationRecord
   has_many :messages, dependent: :destroy
 
   validates :number, presence: false, uniqueness: { scope: :application_id }
+  validates :name, presence: true
 
 
   def set_chat_number

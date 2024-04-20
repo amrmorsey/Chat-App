@@ -25,7 +25,9 @@ curl -X POST   http://localhost:3000/applications   -H 'Content-Type: applicatio
 
 - Add chat to application
 ```
-curl -X POST   http://localhost:3000/applications/:token/chats   -H 'Content-Type: application/json'
+curl -X POST   http://localhost:3000/applications/:token/chats   -H 'Content-Type: application/json' -d '{
+    "name": "chat"
+  }'
 ```
 
 - Get total chats in an application
@@ -41,6 +43,30 @@ curl -X POST -H "Content-Type: application/json" -d '{"body":"Hello, World!"}' h
 - Search/partial search for message in a chat in an application
 ```
 curl -X GET 'http://localhost:3000/applications/:token/chats/:chat_number/messages/search?query=Hello'
+```
+
+- Get all applications
+```
+ curl "http://localhost:3000/applications"
+```
+
+- Get all chats for a specific application
+```
+curl "http://localhost:3000/applications/:token/chats"
+```
+
+- Get all messages for a chat in a specific application
+```
+curl "http://localhost:3000/applications/:token/chats/:chat_number/messages"
+```
+
+- Update application
+```
+curl -X PUT   http://localhost:3000/applications/:token  -H 'Content-Type: application/json'   -d '{
+    "application": {
+      "name": "New Application Name"
+    }
+  }'
 ```
 ## How to clean
 

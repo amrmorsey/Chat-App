@@ -2,12 +2,12 @@ class ChatsController < ApplicationController
     before_action :set_application
     
     def index
-      chats = @application&.chats&.map { |chat| { messages_count: chat.messages_count, number: chat.number, created_at: chat.created_at } } || []
+      chats = @application&.chats&.map { |chat| { name: chat.name, messages_count: chat.messages_count, number: chat.number, created_at: chat.created_at } } || []
       render json: chats, status: :ok
     end
-    
+
     def create
-      @chat = @application.chats.new
+      @chat = @application.chats.new(chat_params)
       @chat.set_chat_number
 
       if @chat.valid?
@@ -24,5 +24,10 @@ class ChatsController < ApplicationController
     def set_application
       @application = Application.find_by!(token: params[:application_id])
     end
+
+    def chat_params
+      params.require(:chat).permit(:name)
+    end
+
   end
   
