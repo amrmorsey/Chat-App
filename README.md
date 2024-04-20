@@ -34,7 +34,8 @@ curl -X GET "http://localhost:3000/applications/:token/total_chats"
 ```
 
 - Add message to a chat in an application
-``` curl -X POST -H "Content-Type: application/json" -d '{"body":"Hello, World!"}' http://localhost:3000/applications/:token/chats/:chat_number/messages
+```
+curl -X POST -H "Content-Type: application/json" -d '{"body":"Hello, World!"}' http://localhost:3000/applications/:token/chats/:chat_number/messages
 ```
 
 - Search/partial search for message in a chat in an application
