@@ -8,7 +8,7 @@ class ApplicationsController < ApplicationController
     def update
       application = Application.find_by(token: params[:id])
       if application.update(application_params)
-        render json: { name: @application.name, token: @application.token }, status: :ok
+        render json: { name: application.name, token: application.token }, status: :ok
       else
         render json: { errors: application.errors }, status: :unprocessable_entity
       end

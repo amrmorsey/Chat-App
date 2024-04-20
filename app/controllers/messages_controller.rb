@@ -51,7 +51,7 @@ class MessagesController < ApplicationController
         _source: ['body', 'number', 'created_at']
       }
     
-      @messages = @chat.messages.search(query).records.map do |message|
+      @messages = @chat.messages.search(query).records.select { |message| message.chat_id == @chat.id }.map do |message|
         {
           body: message.body,
           number: message.number,

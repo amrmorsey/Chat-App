@@ -7,7 +7,7 @@ class Message < ApplicationRecord
   validates :number, presence: true, uniqueness: { scope: :chat_id }
   validates :body, presence: true
 
-  after_commit :index_document, on: [:create, :update]
+  after_commit :index_document, on: [:create, :update, :destroy]
 
   def index_document
     __elasticsearch__.index_document

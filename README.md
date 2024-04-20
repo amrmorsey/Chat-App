@@ -7,6 +7,17 @@ To achieve the purpose of the task, I used the following technologies.
  - I used RabbitMQ to facilitate the asynchronous adding of messages and chats.
  - I used Redis, to help in generating the chat numbers and the messages numbers.
 
+## Design
+![alt text](chat-system.jpg "Overall Design")
+
+The design is as follows:
+- We have the chat application as a ruby on rails service with models for application, chat and messages.
+- We have redis that is used to generate and keep track of messages and chats numbers.
+- We have RabbitMQ queue.
+- We have controllers for them all. These controllers use RabbitMQ as a queue to asynchrously write in the database, by pushing updates to the queue.
+- We have elastic search as a separate service that gets indexed whenever there is a new message update.
+- We have 3 workers, that are sneaker workers that listen on RabbitMQ to update the database asynchronously based on any changes.
+
 ## How to run
 Run the following command to build and run the application
 
@@ -97,5 +108,6 @@ curl -X DELETE http://localhost:3000/applications/:token/chats/:chat_number
 curl -X DELETE -H "Content-Type: application/json" http://localhost:3000/applications/:token/chats/:chat_number/messages/:message_number
 ```
 ## How to clean
+It is recommended to clean after every re run.
 
     ./clean.sh
