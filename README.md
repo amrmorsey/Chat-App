@@ -17,21 +17,30 @@ The `--build` argument is to rebuild the chat app before deploying. If you alrea
 ## APIs and How to test them
 
  - Add an application and get token
-`curl -X POST   http://localhost:3000/applications   -H 'Content-Type: application/json'   -d '{
+```
+curl -X POST   http://localhost:3000/applications   -H 'Content-Type: application/json'   -d '{
     "name": "Samplpp"
-  }'`
+  }'
+  ```
 
 - Add chat to application
-`curl -X POST   http://localhost:3000/applications/:token/chats   -H 'Content-Type: application/json'`
+```
+curl -X POST   http://localhost:3000/applications/:token/chats   -H 'Content-Type: application/json'
+```
 
 - Get total chats in an application
-`curl -X GET "http://localhost:3000/applications/:token/total_chats"`
+```
+curl -X GET "http://localhost:3000/applications/:token/total_chats"
+```
 
 - Add message to a chat in an application
-` curl -X POST -H "Content-Type: application/json" -d '{"body":"Hello, World!"}' http://localhost:3000/applications/:token/chats/:chat_number/messages`
+``` curl -X POST -H "Content-Type: application/json" -d '{"body":"Hello, World!"}' http://localhost:3000/applications/:token/chats/:chat_number/messages
+```
 
 - Search/partial search for message in a chat in an application
-`curl -X GET 'http://localhost:3000/applications/:token/chats/:chat_number/messages/search?query=Hello'`
+```
+curl -X GET 'http://localhost:3000/applications/:token/chats/:chat_number/messages/search?query=Hello'
+```
 ## How to clean
 
     ./clean.sh
